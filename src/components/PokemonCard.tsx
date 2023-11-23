@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SimplePokemon } from '../interface/pokemonInterface';
 import { FadeInImage } from './FadeInImage';
 import ImageColors from 'react-native-image-colors';
+import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -13,14 +14,17 @@ interface Props {
 export const PokemonCard = ({ pokemon }: Props ) => {
 
     const [bgColor, setBgColor] = useState('grey');
+    const isMounted = useRef(true);
 
     const getColorsFromPicture = () => {
       ImageColors.getColors(pokemon.picture, {
         fallback: 'grey',
         cache: true,
         key: pokemon.picture,
-      }).then((colors: any) => {
-        colors.platform === 'ios';
+      }).then((colors: ImageColorsResult) => {
+        
+        if ( !isMounted.current ) return;
+
         switch (colors.platform) {
           case 'android':
             setBgColor(colors.dominant || bgColor);
@@ -38,8 +42,17 @@ export const PokemonCard = ({ pokemon }: Props ) => {
       });
     }
 
+    const capitalizeName = (name: string) => {
+      const nameConverted = name.charAt(0).toUpperCase() + name.slice(1);
+      return nameConverted;
+    }
+
     useEffect(() => {
       getColorsFromPicture();
+
+      return () => {
+        isMounted.current = false;
+      }
     }, []);
     
     
@@ -55,7 +68,7 @@ export const PokemonCard = ({ pokemon }: Props ) => {
             {/* Pokemon Name and ID */}
             <View>
                 <Text style={ styles.name }>
-                    { pokemon.name }
+                    { capitalizeName(pokemon.name) }
                     { '\n#' + pokemon.id }
                 </Text>
             </View>
