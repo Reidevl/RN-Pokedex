@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { pokemonApi } from '../api/pokemonApi';
-import { PokemonPaginatedResponse, Result, SimplePokemon } from '../interface/pokemonInterface';
+import { PokemonPaginatedResponse, Result, SimplePokemon } from '../interface/pokemon.interface';
 
 export const usePokemonPaginated = () => {
 
