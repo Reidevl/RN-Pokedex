@@ -9,6 +9,7 @@ import { RootStackParams } from '../navigator/Navigator';
 // Components
 import { FadeInImage } from '../components/FadeInImage';
 import { usePokemon } from '../hooks/usePokemon';
+import { PokemonDetails } from '../components/PokemonDetails';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -23,10 +24,7 @@ export const PokemonScreen = ( { navigation, route }: Props ) => {
   // Hooks
   const { top } = useSafeAreaInsets();
   const { isLoading, pokemon} = usePokemon( id );
-
-  console.log(pokemon.moves);
-
-
+  
   return (
     <View style={{ flex: 1 }}>
       {/* Header Container */}
@@ -83,13 +81,16 @@ export const PokemonScreen = ( { navigation, route }: Props ) => {
 
       {/* Details and loading */}
       {
-        isLoading && (
+        isLoading 
+        ? (
           <View style={ styles.loading }>
             <ActivityIndicator
               color={ color }
               size={ 50 }
             />
           </View>
+        ) : (
+          <PokemonDetails pokemon={ pokemon }/>
         )
       }
 
