@@ -5,7 +5,7 @@ import ImageColors from 'react-native-image-colors';
 // Hooks
 import { useNavigation } from '@react-navigation/native';
 // Types
-import { RootStackParams } from '../navigator/Navigator';
+import { RootStackParams } from '../navigator/TabList';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 // Components
 import { FadeInImage } from './FadeInImage';

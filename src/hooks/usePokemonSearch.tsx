@@ -1,18 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { pokemonApi } from '../api/pokemonApi';
 import { PokemonPaginatedResponse, Result, SimplePokemon } from '../interface/pokemon.interface';
 
-export const usePokemonPaginated = () => {
+export const usePokemonSearch = () => {
 
+    const [isFetching, setIsFetching] = useState(true);
     const [simplePokemonList, setSimplePokemonList] = useState<SimplePokemon[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const nextPageUrl = useRef('https://pokeapi.co/api/v2/pokemon?limit=40');
+    const urlAPI = 'https://pokeapi.co/api/v2/pokemon?limit=1300'
 
     const loadPokemons = async() => {
-        setIsLoading(true);
-        const resp = await pokemonApi.get<PokemonPaginatedResponse>( nextPageUrl.current );
-        nextPageUrl.current = resp.data.next;
-
+        const resp = await pokemonApi.get<PokemonPaginatedResponse>( urlAPI );
         mapPokemonList(resp.data.results);
     }
 
@@ -26,8 +23,9 @@ export const usePokemonPaginated = () => {
                 return { id, picture, name }
             }
         );
-        setSimplePokemonList([...simplePokemonList, ...newPokemonList]);
-        setIsLoading(false);
+        setSimplePokemonList ( newPokemonList );
+        setIsFetching(false);
+        
     }
 
     useEffect(() => {
@@ -35,9 +33,8 @@ export const usePokemonPaginated = () => {
     }, []);
 
     return {
-        isLoading,
-        simplePokemonList,
-        loadPokemons
+        isFetching,
+        simplePokemonList
     }
         
 }
